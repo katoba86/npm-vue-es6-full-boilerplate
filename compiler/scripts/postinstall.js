@@ -10,9 +10,9 @@ var jsonConfig = require('../postinstall/gulp-config.json');
 class PostInstall {
     constructor() {
         // Checks if gulp-config.json already exists. If it exists, ignores post install process
-        if(this.fsExistsSync('../../gulp-config.json')) {
+        /*if(this.fsExistsSync('../../gulp-config.json')) {
             return;
-        }
+        }*/
         
         this.userData = {};
         this.preprocessorList = {
@@ -72,21 +72,21 @@ class PostInstall {
         this.copyFileList = [
             {
                 input: 'postinstall/gulpfile.js',
-                output: '../../gulpfile.js',
+                output: '../gulpfile-gen.js',
                 force: true,
                 prepend: headerContent
             },
             {
                 input: 'postinstall/gulp-config.json',
-                output: '../../gulp-config.json'
+                output: '../gulp-config-gen.json'
             },
             {
                 input: 'postinstall/.editorconfig',
-                output: '../../.editorconfig'
+                output: '../.editorconfig'
             },
             {
                 input: 'postinstall/.eslintrc.json',
-                output: '../../.eslintrc.json'
+                output: '../.eslintrc.json'
             },
         ];
         
@@ -231,7 +231,7 @@ class PostInstall {
         if (this.userData.preprocessor === 'less') {
             this.copyFileList.push({
                 input: 'postinstall/.lesshintrc',
-                output: '../../.lesshintrc'
+                output: '../.lesshintrc'
             });
             this.folderFilter = 'sass';
         } else {
@@ -242,7 +242,7 @@ class PostInstall {
         if (this.userData.preprocessor === 'sass') {
             this.copyFileList.push({
                 input: 'postinstall/.sass-lint.yml',
-                output: '../../.sass-lint.yml'
+                output: '../.sass-lint.yml'
             });
             this.folderFilter = 'less';
         } else {
@@ -267,7 +267,7 @@ class PostInstall {
 
         // Where "src" folder is and have to be place
         var assetsInput = 'postinstall/src';
-        var assetsOutput = '../../' + this.userData.source;
+        var assetsOutput = '../' + this.userData.source;
 
         // Copy some unitary files
         for(var file of this.copyFileList) {
