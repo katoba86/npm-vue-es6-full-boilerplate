@@ -25,10 +25,10 @@ util.env.boilerplate = {
 
 for(var taskName in config.tasks) {
     if (config.tasks.hasOwnProperty(taskName)) {
-        if(fs.existsSync('./gulp-tasks/' + taskName + '.js')) {
-            gulp.task(taskName, require('./gulp-tasks/' + taskName));
+        if(fs.existsSync('./tasks/' + taskName + '.js')) {
+            gulp.task(taskName, require('./tasks/' + taskName));
         } else {
-            gulp.task(taskName, require('./node_modules/adfab-gulp-boilerplate/tasks/' + taskName));
+            console.log('./tasks/' + taskName + '.js  does not exist!');return false;
         }
         var task = config.tasks[taskName];
         taskList.push(taskName);

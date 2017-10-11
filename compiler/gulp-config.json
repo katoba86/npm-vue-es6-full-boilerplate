@@ -1,0 +1,55 @@
+{
+    "vhost": "test3.local",
+    "sourceRoot": "../assetsrc/",
+    "destinationRoot": "../public/assets/",
+    "tasks": {
+
+        "sass": {
+            "source": ["sass/**/*.scss"],
+            "destination": "css/",
+            "browsers": ["last 2 versions"],
+            "config": {
+                "includePaths": []
+            }
+        },
+        "sasslint": {
+            "source": ["sass/**/*.scss"],
+            "ignore": []
+        },
+        "less": {
+            "source": ["less/style-less.less"],
+            "watch": ["less/**/*.less"],
+            "destination": "css",
+            "browsers": ["last 2 versions"]
+        },
+        "lesshint": {
+            "source": ["less/**/*.less"]
+        },
+
+        "jslibs": {
+            "source": ["libs/**/*.js"],
+            "destination": "scripts",
+            "destinationFile": "lib.js"
+        },
+        "scripts": {
+            "source": ["scripts/app.js"],
+            "destination": "scripts",
+            "destinationFile": "app.js",
+            "babelPresets": ["babel-preset-es2015"]
+        },
+        "eslint": {
+            "source": ["scripts/**/*.js"],
+            "config": {
+                "globals": []
+            }
+        },
+
+        "images": {
+            "source": ["images/**/*"],
+            "destination": "images",
+            "minify": true
+        }
+
+
+    }
+}

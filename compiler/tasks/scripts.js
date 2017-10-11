@@ -33,7 +33,7 @@ module.exports = function() {
         debug: !util.env.production,
         cache: {},
         packageCache: {},
-    }).transform('babelify', { presets: [scriptConfig.babelPresets] });
+    }).transform(babelify, { presets: scriptConfig.babelPresets.map(require.resolve) });
     if(isWatching) {
         bundler = watchify(bundler);
     }
