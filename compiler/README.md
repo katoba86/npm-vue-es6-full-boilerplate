@@ -29,7 +29,7 @@ The goal of this [Gulp](http://gulpjs.com/) boilerplate is to free you time so y
 npm install adfab-gulp-boilerplate
 ```
 
-Upon installation, two files will be copied to the root of your project: `gulpfile.js` and `gulp-config.js`.
+Upon installation, two files will be copied to the root of your project: `_gulpfile.js` and `gulp-config.js`.
 
 ## Usage
 

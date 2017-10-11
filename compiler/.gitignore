@@ -1,0 +1,6 @@
+node_modules
+compiler/node_modules
+dist
+.project
+public/assets
+.idea

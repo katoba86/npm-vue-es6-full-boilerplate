@@ -1,54 +1,85 @@
-var gulp        = require('gulp');
-var mocha = require('gulp-mocha');
+/**
+ * This file is generated. Please don't update it
+ * adfab-gulp-boilerplate - Adfab's boilerplate. Helps you kick-start a front-end project within minutes.
+ * @version v2.0.0
+ * @link https://github.com/AdFabConnect/adfab-gulp-boilerplate
+ * @license ISC
+ */
+
+const config      = require('./gulp-config.json');
+const runSequence = require('run-sequence');
+const gulp        = require('gulp');
+const del         = require('del');
+const browserSync = require('browser-sync');
+const watch       = require('gulp-watch');
+const util = require('gulp-util');
 var fs = require('fs');
 
+var cleanFolderList = [];
+var taskList = [];
+var watchTaskList = [];
 
-// task list test
-var taskList = [
-    'sass',
-    'less'
-];
+util.env.boilerplate = {
+    config
+};
 
-gulp.task('test-unit', function() {
-    for(var index in taskList) {
-        var taskName = taskList[index];
-        try {
-            // Checks if task has a unit test file
-            fs.statSync('test-unit/test-' + taskName + '.js');
-
-            gulp.src(['test-unit/test-' + taskName + '.js'], { read: false })
-            .pipe(mocha({
-                reporter: 'spec'
-            }));
-        } catch (err) {
-            console.log('no unit test for ' + taskName);
+for(var taskName in config.tasks) {
+    if (config.tasks.hasOwnProperty(taskName)) {
+        if(fs.existsSync('./gulp-tasks/' + taskName + '.js')) {
+            gulp.task(taskName, require('./gulp-tasks/' + taskName));
+        } else {
+            gulp.task(taskName, require('./node_modules/adfab-gulp-boilerplate/tasks/' + taskName));
+        }
+        var task = config.tasks[taskName];
+        taskList.push(taskName);
+        if(task.hasOwnProperty('destination') && (!task.hasOwnProperty('clean') || task.clean)) {
+            cleanFolderList.push(config.tasks[taskName].destination);
+        }
+        if(task.hasOwnProperty('watch')) {
+            watchTaskList.push({'task': taskName, 'fileList': task.watch });
+        } else if(task.hasOwnProperty('source')) {
+            // 'scripts' task is bundled with babel, watch is managed in 'scripts' task
+            if(taskName !== 'scripts') {
+                watchTaskList.push({'task': taskName, 'fileList': task.source });
+            }
         }
     }
-    
-    return true;
+}
+
+/**
+ * Clean build directory
+ */
+gulp.task('clean', function() {
+    return del(cleanFolderList, { cwd: config.destinationRoot });
 });
 
-gulp.task('test-func', ['clean'], function() {
-  for(var index in taskList) {
-      var taskName = taskList[index];
-      try {
-          // Checks if task has a unit test file
-          fs.statSync('test-func/test-' + taskName + '.js');
-
-          // Runs task
-          gulp.start(taskName);
-
-          // Runs task tests
-          gulp.src(['test/test-' + taskName + '.js'], { read: false })
-          .pipe(mocha({
-            reporter: 'spec'
-          }));
-      } catch (err) {
-          console.log('no functionnal test for ' + taskName);
-      }
-  }
-  return true;
+/**
+ * Build app from sources
+ */
+gulp.task('build', ['clean'], function() {
+    return runSequence(taskList);
 });
 
+//BrowserSync
+gulp.task('browser-sync', function() {
+    browserSync.init({
+        proxy: config.vhost
+    });
+});
 
-gulp.task('default', ['test-unit'], function () { });
+/**
+ * Watch task for development
+ */
+gulp.task('watch', ['build'],  function() {
+    for(var index in watchTaskList) {
+        var watchTask = watchTaskList[index];
+        watch(watchTask.fileList, { cwd: config.sourceRoot }, function(task) {
+            return function() {
+                return runSequence([task]);
+            };
+        }(watchTask.task));
+    }
+});
+
+gulp.task('serve', ['build', 'watch', 'browser-sync']);
+gulp.task('default', ['build'], function () { });

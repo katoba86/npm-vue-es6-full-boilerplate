@@ -55,6 +55,7 @@ class PostInstall {
                 }]
             },
             'js13k': {},
+            'yii2' : {},
             'other': {}
         };
 
@@ -71,7 +72,7 @@ class PostInstall {
         //Where "src" folder is and have to be place
         this.copyFileList = [
             {
-                input: 'postinstall/gulpfile.js',
+                input: 'postinstall/_gulpfile.js',
                 output: '../gulpfile-gen.js',
                 force: true,
                 prepend: headerContent
